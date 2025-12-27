@@ -142,25 +142,7 @@ Data model: [docs/db.md](docs/db.md)
 New migration in `backend/src/main/resources/db/migration/`:
 - `V{version}__{description}.sql`
 
-### Hot reload
-- Backend: Spring Boot DevTools (automatic restart)
-- Frontend: Vite HMR (automatic refresh)
 
-## ⚠️ Known limitations
-
-- Payments are mocked (no real provider integration)
-- No admin panel in MVP
-- No seat availability validation for concurrent bookings
-- No full support for add-ons (baggage, insurance)
-
-## 📝 TODO / Roadmap
-
-- [ ] Admin panel (flight CRUD)
-- [ ] Add-ons support: baggage, insurance
-- [ ] Booking changes
-- [ ] Integration with external flight API
-- [ ] E2E tests
-- [ ] CI/CD pipeline
 
 ## 📚 Documentation
 
