@@ -1,0 +1,127 @@
+{
+    "common": {
+        "loading": "Ładowanie...",
+        "processing": "Przetwarzanie...",
+        "confirm": "Potwierdź"
+    },
+    "navbar": {
+        "search": "Wyszukaj loty",
+        "bookings": "Moje rezerwacje",
+        "login": "Zaloguj się",
+        "register": "Zarejestruj się",
+        "logout": "Wyloguj"
+    },
+    "search": {
+        "title": "Znajdź swój wymarzony lot",
+        "subtitle": "Odkrywaj świat z naszymi usługami premium",
+        "from": "Skąd",
+        "to": "Dokąd",
+        "date": "Data",
+        "searchButton": "Szukaj lotów",
+        "passengers": "Liczba pasażerów",
+        "results": "Wyniki wyszukiwania",
+        "noFlights": "Nie znaleziono lotów dla wybranych kryteriów.",
+        "anyClass": "Dowolna klasa",
+        "searching": "Wyszukiwanie...",
+        "fromPlaceholder": "Wyszukaj miasto lub lotnisko...",
+        "toPlaceholder": "Wyszukaj miasto lub lotnisko...",
+        "nonStop": "Bezpośredni",
+        "loadingAirports": "Ładowanie...",
+        "noAirportsFound": "Nie znaleziono lotnisk"
+    },
+    "flightDetails": {
+        "title": "Szczegóły lotu",
+        "departure": "Wylot",
+        "arrival": "Przylot",
+        "duration": "Czas trwania",
+        "price": "Cena",
+        "seats": "Dostępne miejsca",
+        "class": "Klasa podróży",
+        "baggage": "Informacje o bagażu",
+        "baggageInfo": "Bagaż podręczny: 8kg, Bagaż rejestrowany: 23kg",
+        "rules": "Zasady zmian i anulacji",
+        "rulesInfo": "Zmiana biletu: 150 PLN, Anulowanie: 50% zwrotu do 7 dni przed lotem",
+        "passengers": "Pasażerowie",
+        "bookButton": "Zarezerwuj teraz",
+        "economy": "Ekonomiczna",
+        "business": "Biznesowa",
+        "first": "Pierwsza"
+    },
+    "bookingForm": {
+        "title": "Formularz rezerwacji",
+        "flight": "Lot",
+        "pricePerPerson": "Cena za osobę",
+        "passenger": "Pasażer",
+        "name": "Imię",
+        "surname": "Nazwisko",
+        "dob": "Data urodzenia",
+        "document": "Numer dokumentu",
+        "extras": "Dodatki",
+        "extraBaggage": "Dodatkowy bagaż",
+        "insurance": "Ubezpieczenie podróżne",
+        "summary": "Podsumowanie",
+        "totalPrice": "Cena całkowita",
+        "paymentButton": "Przejdź do płatności"
+    },
+    "payment": {
+        "title": "Płatność",
+        "summary": "Podsumowanie rezerwacji",
+        "reservationId": "ID rezerwacji",
+        "route": "Trasa",
+        "passengers": "Liczba pasażerów",
+        "status": "Status",
+        "amount": "Kwota do zapłaty",
+        "simulation": "Symulacja płatności (Mock)",
+        "paySuccess": "Zapłać (Sukces)",
+        "payFail": "Symuluj błąd",
+        "successTitle": "Płatność udana!",
+        "successMessage": "Twoja rezerwacja została potwierdzona.",
+        "failTitle": "Płatność nieudana",
+        "failMessage": "Coś poszło nie tak. Spróbuj ponownie lub skontaktuj się z obsługą.",
+        "myBookingsButton": "Moje rezerwacje",
+        "searchNextButton": "Wyszukaj kolejny lot",
+        "statusValue": {
+            "CONFIRMED": "Potwierdzona",
+            "REJECTED": "Odrzucona",
+            "NEW": "Nowa"
+        }
+    },
+    "bookingsList": {
+        "title": "Moje rezerwacje",
+        "noBookings": "Nie masz jeszcze żadnych rezerwacji.",
+        "startSearching": "Rozpocznij swoją podróż od wyszukania lotu.",
+        "passengerDetails": "Szczegóły pasażerów",
+        "payNow": "Zapłać teraz",
+        "cancel": "Anuluj",
+        "cancelConfirm": "Czy na pewno chcesz anulować tę rezerwację?",
+        "status": {
+            "PAID": "Opłacona",
+            "PENDING_PAYMENT": "Oczekuje na płatność",
+            "PAYMENT_FAILED": "Płatność nieudana",
+            "CANCELLED": "Anulowana"
+        }
+    },
+    "auth": {
+        "loginTitle": "Logowanie",
+        "registerTitle": "Rejestracja",
+        "username": "Login",
+        "password": "Hasło",
+        "firstName": "Imię",
+        "lastName": "Nazwisko",
+        "email": "Email",
+        "phone": "Telefon",
+        "successRegister": "Rejestracja udana! Możesz się już zalogować."
+    },
+    "errors": {
+        "loadFlight": "Błąd podczas ładowania szczegółów lotu",
+        "loadBooking": "Błąd podczas ładowania szczegółów rezerwacji",
+        "loadBookings": "Błąd podczas ładowania Twoich rezerwacji",
+        "createBooking": "Błąd podczas tworzenia rezerwacji",
+        "processPayment": "Błąd podczas przetwarzania płatności",
+        "cancelBooking": "Błąd podczas anulowania rezerwacji",
+        "missingFlightId": "Brak ID lotu",
+        "missingBookingId": "Brak ID rezerwacji",
+        "notFound": "Nie znaleziono elementu",
+        "search": "Błąd podczas wyszukiwania lotów"
+    }
+}

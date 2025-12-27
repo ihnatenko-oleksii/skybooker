@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flightbooking-db
+    environment:
+      POSTGRES_DB: flightbooking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - flightbooking-network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  flightbooking-network:
+    driver: bridge

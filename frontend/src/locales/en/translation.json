@@ -1,0 +1,127 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "processing": "Processing...",
+        "confirm": "Confirm"
+    },
+    "navbar": {
+        "search": "Search Flights",
+        "bookings": "My Bookings",
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout"
+    },
+    "search": {
+        "title": "Search for your flight",
+        "subtitle": "Discover the world with our premium service",
+        "from": "From",
+        "to": "To",
+        "date": "Date",
+        "searchButton": "Search Flights",
+        "passengers": "Passengers",
+        "results": "Search Results",
+        "noFlights": "No flights found for selected criteria.",
+        "anyClass": "Any Class",
+        "searching": "Searching...",
+        "fromPlaceholder": "Search city or airport...",
+        "toPlaceholder": "Search city or airport...",
+        "nonStop": "Non-stop",
+        "loadingAirports": "Loading...",
+        "noAirportsFound": "No airports found"
+    },
+    "flightDetails": {
+        "title": "Flight Details",
+        "departure": "Departure",
+        "arrival": "Arrival",
+        "duration": "Duration",
+        "price": "Price",
+        "seats": "Available seats",
+        "class": "Travel Class",
+        "baggage": "Baggage Info",
+        "baggageInfo": "Carry-on: 8kg, Checked: 23kg",
+        "rules": "Change & Cancellation Rules",
+        "rulesInfo": "Change: 150 PLN, Cancel: 50% refund up to 7 days before",
+        "passengers": "Passengers",
+        "bookButton": "Book Now",
+        "economy": "Economy",
+        "business": "Business",
+        "first": "First"
+    },
+    "bookingForm": {
+        "title": "Booking Form",
+        "flight": "Flight",
+        "pricePerPerson": "Price per person",
+        "passenger": "Passenger",
+        "name": "First Name",
+        "surname": "Last Name",
+        "dob": "Date of Birth",
+        "document": "Document Number",
+        "extras": "Extras",
+        "extraBaggage": "Extra Baggage",
+        "insurance": "Travel Insurance",
+        "summary": "Summary",
+        "totalPrice": "Total Price",
+        "paymentButton": "Proceed to Payment"
+    },
+    "payment": {
+        "title": "Payment",
+        "summary": "Reservation Summary",
+        "reservationId": "Reservation ID",
+        "route": "Route",
+        "passengers": "Passengers",
+        "status": "Status",
+        "amount": "Amount to Pay",
+        "simulation": "Payment Simulation (Mock)",
+        "paySuccess": "Pay (Success)",
+        "payFail": "Simulate Failure",
+        "successTitle": "Payment Successful!",
+        "successMessage": "Your reservation has been confirmed.",
+        "failTitle": "Payment Failed",
+        "failMessage": "Something went wrong. Please try again or contact support.",
+        "myBookingsButton": "My Bookings",
+        "searchNextButton": "Search Next Flight",
+        "statusValue": {
+            "CONFIRMED": "Confirmed",
+            "REJECTED": "Rejected",
+            "NEW": "New"
+        }
+    },
+    "bookingsList": {
+        "title": "My Bookings",
+        "noBookings": "You don't have any bookings yet.",
+        "startSearching": "Start your journey by searching for a flight.",
+        "passengerDetails": "Passenger Details",
+        "payNow": "Pay Now",
+        "cancel": "Cancel",
+        "cancelConfirm": "Are you sure you want to cancel this reservation?",
+        "status": {
+            "PAID": "Paid",
+            "PENDING_PAYMENT": "Pending Payment",
+            "PAYMENT_FAILED": "Payment Failed",
+            "CANCELLED": "Cancelled"
+        }
+    },
+    "auth": {
+        "loginTitle": "Login",
+        "registerTitle": "Register",
+        "username": "Username",
+        "password": "Password",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "phone": "Phone",
+        "successRegister": "Registration successful! You can now login."
+    },
+    "errors": {
+        "loadFlight": "Error loading flight details",
+        "loadBooking": "Error loading booking details",
+        "loadBookings": "Error loading your bookings",
+        "createBooking": "Error creating reservation",
+        "processPayment": "Error processing payment",
+        "cancelBooking": "Error cancelling reservation",
+        "missingFlightId": "Flight ID is missing",
+        "missingBookingId": "Booking ID is missing",
+        "notFound": "Item not found",
+        "search": "Error searching for flights"
+    }
+}
