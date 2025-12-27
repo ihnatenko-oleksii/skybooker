@@ -1,28 +1,28 @@
-# System wyszukiwania i zakupu biletów lotniczych
+# Flight Ticket Search and Purchase System
 
-System rezerwacji biletów lotniczych zbudowany w architekturze Spring Boot (backend) + React (frontend).
+Flight ticket reservation system built with Spring Boot (backend) + React (frontend).
 
-## 📋 Wymagania wstępne
+## 📋 Prerequisites
 
-- **Java 17+** (zalecane: Java 17 lub 21)
+- **Java 17+** (recommended: Java 17 or 21)
 - **Maven 3.8+**
-- **Node.js 18+** i npm
-- **Docker** i Docker Compose
+- **Node.js 18+** and npm
+- **Docker** and Docker Compose
 
-## 🚀 Szybki start
+## 🚀 Quick start
 
-### 1. Uruchom bazę danych
+### 1. Start the database
 
 ```bash
 docker-compose up -d
 ```
 
-Sprawdź, czy PostgreSQL działa:
+Check that PostgreSQL is running:
 ```bash
 docker ps
 ```
 
-### 2. Uruchom backend
+### 2. Start the backend
 
 ```bash
 cd backend
@@ -30,11 +30,11 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-Backend będzie dostępny pod adresem: `http://localhost:8080`
+Backend will be available at: `http://localhost:8080`
 
-### 3. Uruchom frontend
+### 3. Start the frontend
 
-W nowym terminalu:
+In a new terminal:
 
 ```bash
 cd frontend
@@ -42,9 +42,9 @@ npm install
 npm run dev
 ```
 
-Frontend będzie dostępny pod adresem: `http://localhost:5173`
+Frontend will be available at: `http://localhost:5173`
 
-## 📁 Struktura projektu
+## 📁 Project structure
 
 ```
 .
@@ -52,7 +52,7 @@ Frontend będzie dostępny pod adresem: `http://localhost:5173`
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/flightbooking/
-│   │   │   │   ├── config/      # Konfiguracja (CORS)
+│   │   │   │   ├── config/      # Configuration (CORS)
 │   │   │   │   ├── controller/  # REST controllers
 │   │   │   │   ├── dto/         # DTOs
 │   │   │   │   ├── entity/      # JPA entities
@@ -73,101 +73,101 @@ Frontend będzie dostępny pod adresem: `http://localhost:5173`
 │   │   └── main.jsx
 │   ├── package.json
 │   └── vite.config.js
-├── docs/                   # Dokumentacja
+├── docs/                   # Documentation
 └── docker-compose.yml      # PostgreSQL
 ```
 
-## 🔑 Uwierzytelnianie (MVP)
+## 🔑 Authentication (MVP)
 
-Dla uproszczenia MVP, system używa nagłówka `X-User-Id` do identyfikacji użytkownika.
+To simplify the MVP, the system uses the `X-User-Id` header to identify the user.
 
-**Domyślny użytkownik:** ID = 1 (tworzony automatycznie w seed danych)
+**Default user:** ID = 1 (created automatically in seed data)
 
-W środowisku produkcyjnym należy zaimplementować pełne uwierzytelnianie (JWT/OAuth2).
+In production, full authentication should be implemented (JWT/OAuth2).
 
-## 🌐 Endpointy API
+## 🌐 API endpoints
 
 ### Flights
-- `GET /api/flights/search?from={IATA}&to={IATA}&date={YYYY-MM-DD}&passengers={n}&travelClass={ECONOMY|BUSINESS}` - Wyszukaj loty
-- `GET /api/flights/{id}` - Szczegóły lotu
+- `GET /api/flights/search?from={IATA}&to={IATA}&date={YYYY-MM-DD}&passengers={n}&travelClass={ECONOMY|BUSINESS}` - Search flights
+- `GET /api/flights/{id}` - Flight details
 
 ### Bookings
-- `POST /api/bookings` - Utwórz rezerwację
-- `GET /api/bookings/me` - Moje rezerwacje
-- `GET /api/bookings/{id}` - Szczegóły rezerwacji
-- `POST /api/bookings/{id}/cancel` - Anuluj rezerwację
+- `POST /api/bookings` - Create a booking
+- `GET /api/bookings/me` - My bookings
+- `GET /api/bookings/{id}` - Booking details
+- `POST /api/bookings/{id}/cancel` - Cancel a booking
 
 ### Payments
-- `POST /api/payments/mock` - Płatność mock (SUCCESS/FAIL)
+- `POST /api/payments/mock` - Mock payment (SUCCESS/FAIL)
 
-Szczegółowy kontrakt API: [docs/api.md](docs/api.md)
+Detailed API contract: [docs/api.md](docs/api.md)
 
-## 🧪 Testowanie
+## 🧪 Testing
 
-### Testy backend
+### Backend tests
 
 ```bash
 cd backend
 mvn test
 ```
 
-### Scenariusz demo (TODO - uzupełnione po implementacji)
+### Demo scenario (TODO - to be filled after implementation)
 
-1. Wyszukaj loty z WAW do FCO
-2. Wybierz lot i zobacz szczegóły
-3. Utwórz rezerwację dla 2 pasażerów
-4. Wykonaj płatność (SUCCESS)
-5. Zobacz listę rezerwacji
-6. Anuluj rezerwację
+1. Search flights from WAW to FCO
+2. Select a flight and view details
+3. Create a booking for 2 passengers
+4. Make a payment (SUCCESS)
+5. View the list of bookings
+6. Cancel the booking
 
-## 📊 Baza danych
+## 📊 Database
 
 **PostgreSQL** (port 5432)
 - Database: `flightbooking`
 - User: `postgres`
 - Password: `postgres`
 
-Migracje zarządzane przez **Flyway**.
+Migrations managed by **Flyway**.
 
-Model danych: [docs/db.md](docs/db.md)
+Data model: [docs/db.md](docs/db.md)
 
-## 🛠️ Rozwój
+## 🛠️ Development
 
 ### Flyway migrations
 
-Nowa migracja w `backend/src/main/resources/db/migration/`:
+New migration in `backend/src/main/resources/db/migration/`:
 - `V{version}__{description}.sql`
 
 ### Hot reload
-- Backend: Spring Boot DevTools (automatyczny restart)
-- Frontend: Vite HMR (automatyczne odświeżanie)
+- Backend: Spring Boot DevTools (automatic restart)
+- Frontend: Vite HMR (automatic refresh)
 
-## ⚠️ Znane ograniczenia
+## ⚠️ Known limitations
 
-- Brak pełnego systemu uwierzytelniania (tylko X-User-Id header)
-- Płatności jako mock (brak integracji z prawdziwym dostawcą)
-- Brak panelu administratora w MVP
-- Brak walidacji dostępności miejsc przy równoczesnych rezerwacjach
-- Brak obsługi dodatków (bagaż, ubezpieczenie) w pełnym zakresie
+- No full authentication system (only X-User-Id header)
+- Payments are mocked (no real provider integration)
+- No admin panel in MVP
+- No seat availability validation for concurrent bookings
+- No full support for add-ons (baggage, insurance)
 
 ## 📝 TODO / Roadmap
 
-- [ ] Implementacja JWT authentication
-- [ ] Panel administratora (CRUD lotów)
-- [ ] Obsługa dodatków: bagaż, ubezpieczenie
-- [ ] Zmiana rezerwacji
-- [ ] Integracja z zewnętrznym API lotów
-- [ ] Testy E2E
+- [ ] Implement JWT authentication
+- [ ] Admin panel (flight CRUD)
+- [ ] Add-ons support: baggage, insurance
+- [ ] Booking changes
+- [ ] Integration with external flight API
+- [ ] E2E tests
 - [ ] CI/CD pipeline
 
-## 📚 Dokumentacja
+## 📚 Documentation
 
-- [Wymagania](docs/requirements.md)
-- [Kontrakt API](docs/api.md)
-- [Model danych](docs/db.md)
+- [Requirements](docs/requirements.md)
+- [API contract](docs/api.md)
+- [Data model](docs/db.md)
 - [Traceability](docs/traceability.md)
-- [Postęp implementacji](docs/progress.md)
+- [Implementation progress](docs/progress.md)
 
-## 📄 Licencja
+## 📄 License
 
-Projekt edukacyjny - Inżynieria Oprogramowania II
+Educational project - Software Engineering II
