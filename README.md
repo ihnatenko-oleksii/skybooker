@@ -4,7 +4,7 @@ Flight ticket reservation system built with Spring Boot (backend) + React (front
 
 ## 📋 Prerequisites
 
-- **Java 17+** (recommended: Java 17 or 21)
+- **Java 21+**
 - **Maven 3.8+**
 - **Node.js 18+** and npm
 - **Docker** and Docker Compose
@@ -77,28 +77,32 @@ Frontend will be available at: `http://localhost:5173`
 └── docker-compose.yml      # PostgreSQL
 ```
 
-## 🔑 Authentication (MVP)
+## 🔑 Authentication (JWT)
 
-To simplify the MVP, the system uses the `X-User-Id` header to identify the user.
+The system uses JWT-based authentication.
 
-**Default user:** ID = 1 (created automatically in seed data)
-
-In production, full authentication should be implemented (JWT/OAuth2).
+- `POST /api/auth/register` to create an account
+- `POST /api/auth/login` to get a token
+- Send `Authorization: Bearer <token>` for protected endpoints (bookings, payments, etc.)
 
 ## 🌐 API endpoints
+
+### Auth
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login and receive JWT
 
 ### Flights
 - `GET /api/flights/search?from={IATA}&to={IATA}&date={YYYY-MM-DD}&passengers={n}&travelClass={ECONOMY|BUSINESS}` - Search flights
 - `GET /api/flights/{id}` - Flight details
 
 ### Bookings
-- `POST /api/bookings` - Create a booking
-- `GET /api/bookings/me` - My bookings
+- `POST /api/bookings` - Create a booking (requires auth)
+- `GET /api/bookings/me` - My bookings (requires auth)
 - `GET /api/bookings/{id}` - Booking details
 - `POST /api/bookings/{id}/cancel` - Cancel a booking
 
 ### Payments
-- `POST /api/payments/mock` - Mock payment (SUCCESS/FAIL)
+- `POST /api/payments/mock` - Mock payment (SUCCESS/FAIL, requires auth)
 
 Detailed API contract: [docs/api.md](docs/api.md)
 
@@ -144,7 +148,6 @@ New migration in `backend/src/main/resources/db/migration/`:
 
 ## ⚠️ Known limitations
 
-- No full authentication system (only X-User-Id header)
 - Payments are mocked (no real provider integration)
 - No admin panel in MVP
 - No seat availability validation for concurrent bookings
@@ -152,7 +155,6 @@ New migration in `backend/src/main/resources/db/migration/`:
 
 ## 📝 TODO / Roadmap
 
-- [ ] Implement JWT authentication
 - [ ] Admin panel (flight CRUD)
 - [ ] Add-ons support: baggage, insurance
 - [ ] Booking changes
