@@ -123,7 +123,9 @@ function FlightDetailsPage() {
                             <span>{passengers}</span>
                             <button type="button" onClick={() => updatePassengers(1)} disabled={passengers >= flight.availableSeats}>+</button>
                         </div>
-                        <p className="seats-left">{flight.availableSeats} {t('flightDetails.seats')}</p>
+                        <p className="seats-left">
+                            {Math.max(0, flight.availableSeats - passengers)} {t('flightDetails.seats')}
+                        </p>
                     </div>
 
                     <div className="total-box">
