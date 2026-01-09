@@ -40,11 +40,51 @@ public class InvoiceData {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    public void generateInvoice() {
-        // Implementation logic
+    /**
+     * Generuje fakturę.
+     * UML: DaneDoFaktury.WygenerujFakture()
+     * Zwraca fakturę jako sformatowany tekst (format HTML/tekstowy dla MVP).
+     */
+    public String generateInvoice() {
+        StringBuilder invoice = new StringBuilder();
+        invoice.append("=== FAKTURA ===\n\n");
+        
+        if (companyName != null) {
+            invoice.append("Firma: ").append(companyName).append("\n");
+        }
+        if (nip != null) {
+            invoice.append("NIP: ").append(nip).append("\n");
+        }
+        if (address != null) {
+            invoice.append("Adres: ").append(address).append("\n");
+        }
+        if (issueDate != null) {
+            invoice.append("Data wystawienia: ").append(issueDate).append("\n");
+        }
+        if (saleDate != null) {
+            invoice.append("Data sprzedaży: ").append(saleDate).append("\n");
+        }
+        
+        invoice.append("\n=== PRODUKTY ===\n");
+        if (products != null && !products.isEmpty()) {
+            for (Booking booking : products) {
+                invoice.append("Rezerwacja #").append(booking.getId())
+                       .append(" - ").append(booking.getTotalPrice())
+                       .append(" ").append(booking.getCurrency()).append("\n");
+            }
+        }
+        
+        if (payment != null) {
+            invoice.append("\n=== PŁATNOŚĆ ===\n");
+            invoice.append("Kwota: ").append(payment.getAmount())
+                   .append(" ").append(payment.getCurrency()).append("\n");
+            invoice.append("Status: ").append(payment.getStatus()).append("\n");
+        }
+        
+        return invoice.toString();
     }
 
-    // Getters and Setters
+    // Gettery i Settery
     public Long getId() {
         return id;
     }

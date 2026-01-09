@@ -26,9 +26,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + login));
 
-        Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-        // You might want to differentiate roles based on User subclass
-        // (Client/Administrator)
+        // Set role based on user type (CLIENT or ADMIN)
+        Set<GrantedAuthority> authorities;
+        if (user instanceof com.flightbooking.entity.Administrator) {
+            authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),

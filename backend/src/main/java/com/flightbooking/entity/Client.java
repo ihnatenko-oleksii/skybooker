@@ -8,7 +8,6 @@ import java.util.List;
 @DiscriminatorValue("CLIENT")
 public class Client extends User {
 
-    // "daneDoFaktury"
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_data_id")
     private InvoiceData invoiceData;
@@ -25,43 +24,6 @@ public class Client extends User {
         this.invoiceData = invoiceData;
     }
 
-    // Methods from diagram
-    public void searchFlights(String criteria) {
-        // Implementation
-    }
-
-    public void createReservation(Flight flight, List<Passenger> passengers) {
-        // Implementation
-    }
-
-    public void viewReservations() {
-        // Implementation
-    }
-
-    public void cancelReservation(Booking booking) {
-        // Implementation
-    }
-
-    public void modifyReservation(Booking booking) {
-        // Implementation
-    }
-
-    @Override
-    public void register() {
-        // Implementation
-    }
-
-    @Override
-    public void login(String login, String password) {
-        // Implementation
-    }
-
-    @Override
-    public void logout() {
-        // Implementation
-    }
-
-    // Getters and Setters
     public InvoiceData getInvoiceData() {
         return invoiceData;
     }

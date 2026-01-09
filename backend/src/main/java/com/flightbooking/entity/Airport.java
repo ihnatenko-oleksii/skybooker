@@ -8,7 +8,7 @@ public class Airport {
 
     @Id
     @Column(name = "code", length = 3)
-    private String code; // IATA code (e.g., WAW, FCO)
+    private String code; // Kod IATA (np. WAW, FCO)
 
     @Column(nullable = false, length = 200)
     private String name;
@@ -28,6 +28,26 @@ public class Airport {
         this.name = name;
         this.city = city;
         this.country = country;
+    }
+
+    /**
+     * Aktualizuje dane lotniska.
+     * UML: Lotnisko.zaktualizujDane(noweDane: Lotnisko)
+     */
+    public void updateData(Airport newData) {
+        if (newData == null) {
+            return;
+        }
+        // Kod jest kluczem głównym, nie aktualizujemy go
+        if (newData.getName() != null) {
+            this.name = newData.getName();
+        }
+        if (newData.getCity() != null) {
+            this.city = newData.getCity();
+        }
+        if (newData.getCountry() != null) {
+            this.country = newData.getCountry();
+        }
     }
 
     public String getCode() {

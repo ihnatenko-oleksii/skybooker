@@ -41,6 +41,21 @@ public class Passenger {
         this.documentNumber = documentNumber;
     }
 
+    /**
+     * Aktualizuje dane pasażera.
+     * UML: Pasazer.ZakutalizujDane(Pasazer): bool
+     */
+    public boolean updateData(Passenger newData) {
+        if (newData == null) {
+            return false;
+        }
+        this.firstName = newData.getFirstName();
+        this.lastName = newData.getLastName();
+        this.birthDate = newData.getBirthDate();
+        this.documentNumber = newData.getDocumentNumber();
+        return true;
+    }
+
     public Long getId() {
         return id;
     }

@@ -58,28 +58,28 @@ public class Payment {
         this.externalTxId = externalTxId;
     }
 
-    // Business Methods
+    // Metody biznesowe
 
     public void startPayment() { // rozpocznijPłatność()
-        this.status = PaymentStatus.NEW; // Or PENDING
+        this.status = PaymentStatus.NEW; // Lub PENDING
         this.paymentDate = LocalDateTime.now();
     }
 
     public void markAsConfirmed() { // oznaczJakoPotwierdzona()
         this.status = PaymentStatus.CONFIRMED;
         if (booking != null) {
-            booking.setStatus(BookingStatus.PAID); // Update booking status as well?
+            booking.setStatus(BookingStatus.PAID); // Aktualizacja statusu rezerwacji również
         }
     }
 
     public void markAsRejected() { // oznaczJakoOdrzucona()
         this.status = PaymentStatus.REJECTED;
         if (booking != null) {
-            // booking.setStatus(BookingStatus.PAYMENT_FAILED); // If exists
+            booking.setStatus(BookingStatus.PAYMENT_FAILED);
         }
     }
 
-    // Getters and Setters
+    // Gettery i Settery
     public Long getId() {
         return id;
     }

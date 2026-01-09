@@ -73,11 +73,25 @@ public class Booking {
         this.payment = payment;
     }
 
-    // Business Methods from Diagram
+    // Metody biznesowe z diagramu
 
     public void addPassenger(Passenger passenger) {
         passenger.setBooking(this);
         this.passengers.add(passenger);
+    }
+
+    /**
+     * Dodaje wielu pasażerów do rezerwacji.
+     * UML: Rezerwacja.dodajPasazerow(List<Pasazer>): bool
+     */
+    public boolean addPassengers(List<Passenger> passengers) {
+        if (passengers == null || passengers.isEmpty()) {
+            return false;
+        }
+        for (Passenger passenger : passengers) {
+            addPassenger(passenger);
+        }
+        return true;
     }
 
     public void removePassenger(Passenger passenger) {
@@ -85,8 +99,24 @@ public class Booking {
         passenger.setBooking(null);
     }
 
+    /**
+     * Usuwa pasażera po ID.
+     * UML: Rezerwacja.usunPasazera(int idPasazera): bool
+     */
+    public boolean removePassengerById(Long passengerId) {
+        Passenger passenger = this.passengers.stream()
+                .filter(p -> p.getId().equals(passengerId))
+                .findFirst()
+                .orElse(null);
+        
+        if (passenger != null) {
+            removePassenger(passenger);
+            return true;
+        }
+        return false;
+    }
+
     public BigDecimal calculatePrice() {
-        // Delegate to Flight logic or local logic
         if (flight != null) {
             BigDecimal pricePerPerson = flight.calculatePrice(flight.getTravelClass(),
                     Boolean.TRUE.equals(extraBaggage), Boolean.TRUE.equals(insurance));
@@ -95,6 +125,14 @@ public class Booking {
             return total;
         }
         return BigDecimal.ZERO;
+    }
+
+    /**
+     * Pobiera całkowitą cenę.
+     * UML: Rezerwacja.dajCene(): float
+     */
+    public BigDecimal getPrice() {
+        return this.totalPrice;
     }
 
     public void addExtraBaggage() {
@@ -107,12 +145,24 @@ public class Booking {
         calculatePrice();
     }
 
-    public void cancel() {
+    /**
+     * Anuluje rezerwację.
+     * UML: Rezerwacja.anulujRezerwacje(): bool
+     */
+    public boolean cancelReservation() {
+        if (this.status == BookingStatus.CANCELLED) {
+            return false; // Już anulowana
+        }
         this.status = BookingStatus.CANCELLED;
-        // Restore flight seats logic could be here or service
+        // Logika przywracania miejsc w locie mogłaby być tutaj lub w serwisie
+        return true;
     }
 
-    // Getters and Setters
+    public void cancel() {
+        cancelReservation();
+    }
+
+    // Gettery i Settery
 
     public Long getId() {
         return id;
@@ -150,8 +200,20 @@ public class Booking {
         return status;
     }
 
-    public void setStatus(BookingStatus status) {
+    /**
+     * Ustawia status rezerwacji z walidacją.
+     * UML: Rezerwacja.ustawStatus(status: StatusRezerwacji): bool
+     */
+    public boolean setStatus(BookingStatus status) {
+        if (status == null) {
+            return false;
+        }
+        // Walidacja: nie można zmienić z CANCELLED na inny status
+        if (this.status == BookingStatus.CANCELLED && status != BookingStatus.CANCELLED) {
+            return false;
+        }
         this.status = status;
+        return true;
     }
 
     public BigDecimal getTotalPrice() {

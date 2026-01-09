@@ -1,6 +1,7 @@
 package com.flightbooking.controller;
 
 import com.flightbooking.dto.FlightResponse;
+import com.flightbooking.service.ClientService;
 import com.flightbooking.service.FlightService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,13 @@ import java.util.List;
 @RequestMapping("/api/flights")
 public class FlightController {
 
+    private final ClientService clientService;
     private final FlightService flightService;
 
+    /**
+     * Wyszukuje loty używając ClientService.
+     * UML: Klient.wyszukajLoty()
+     */
     @GetMapping("/search")
     public ResponseEntity<List<FlightResponse>> searchFlights(
             @RequestParam String from,
@@ -23,7 +29,7 @@ public class FlightController {
             @RequestParam(required = false, defaultValue = "1") Integer passengers,
             @RequestParam(required = false) String travelClass) {
 
-        List<FlightResponse> flights = flightService.searchFlights(from, to, date, passengers, travelClass);
+        List<FlightResponse> flights = clientService.searchFlights(from, to, date, passengers, travelClass);
         return ResponseEntity.ok(flights);
     }
 
@@ -33,8 +39,8 @@ public class FlightController {
         return ResponseEntity.ok(flight);
     }
 
-
-    public FlightController(FlightService flightService) {
+    public FlightController(ClientService clientService, FlightService flightService) {
+        this.clientService = clientService;
         this.flightService = flightService;
     }
 }

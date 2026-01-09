@@ -29,13 +29,13 @@ public class PaymentService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Booking not found with id: " + request.getBookingId()));
 
-        // Validate booking status
+        // Walidacja statusu rezerwacji
         if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
             throw new BusinessException(
                     "Booking is not in PENDING_PAYMENT status. Current status: " + booking.getStatus());
         }
 
-        // Create or update payment
+        // Utworzenie lub aktualizacja płatności
         Payment payment = paymentRepository.findByBookingId(booking.getId())
                 .orElse(new Payment());
 
@@ -46,24 +46,27 @@ public class PaymentService {
         payment.setMethod(request.getMethod());
         payment.setExternalTxId("MOCK-" + UUID.randomUUID().toString());
 
-        // Process based on outcome
+        // Rozpoczęcie płatności używając metody z UML
+        payment.startPayment();
+
+        // Przetwarzanie na podstawie wyniku używając metod z UML
         PaymentResponse response = new PaymentResponse();
 
         if ("SUCCESS".equalsIgnoreCase(request.getOutcome())) {
-            payment.setStatus(PaymentStatus.CONFIRMED);
-            booking.setStatus(BookingStatus.PAID);
+            payment.markAsConfirmed(); // Użycie metody z UML
+            booking.setStatus(BookingStatus.PAID); // Użycie setStatus z walidacją
             response.setStatus("CONFIRMED");
             response.setBookingStatus("PAID");
         } else if ("FAIL".equalsIgnoreCase(request.getOutcome())) {
-            payment.setStatus(PaymentStatus.REJECTED);
-            booking.setStatus(BookingStatus.PAYMENT_FAILED);
+            payment.markAsRejected(); // Użycie metody z UML
+            booking.setStatus(BookingStatus.PAYMENT_FAILED); // Użycie setStatus z walidacją
             response.setStatus("REJECTED");
             response.setBookingStatus("PAYMENT_FAILED");
         } else {
             throw new BusinessException("Invalid outcome. Must be SUCCESS or FAIL");
         }
 
-        // Save payment and booking
+        // Zapisanie płatności i rezerwacji
         payment = paymentRepository.save(payment);
         bookingRepository.save(booking);
 

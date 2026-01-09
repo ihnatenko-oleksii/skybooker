@@ -13,14 +13,14 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
     @PostMapping("/mock")
     public ResponseEntity<PaymentResponse> processMockPayment(@Valid @RequestBody PaymentRequest request) {
         PaymentResponse response = paymentService.processMockPayment(request);
         return ResponseEntity.ok(response);
     }
 
-
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
 }

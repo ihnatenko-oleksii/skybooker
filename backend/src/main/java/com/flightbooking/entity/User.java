@@ -12,8 +12,6 @@ public abstract class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Role is handled by DiscriminatorColumn "user_type"
-
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
@@ -46,14 +44,26 @@ public abstract class User {
         this.passwordHash = passwordHash;
     }
 
-    // Abstract methods from diagram
-    public abstract void register(); // zarestrujSie()
+    /**
+     * Sprawdza dane logowania.
+     * UML: UżytkownikSystemu.sprawdzDaneLogowania(login: string, haslo: string)
+     * Uwaga: Ta metoda porównuje podane hasło z zapisanym hashem.
+     * PasswordEncoder powinien być dostarczony przez warstwę serwisową.
+     */
+    public boolean checkLoginCredentials(String providedLogin, String providedPassword, 
+                                         org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
+        if (providedLogin == null || providedPassword == null || passwordEncoder == null) {
+            return false;
+        }
+        // Sprawdzenie czy login się zgadza
+        if (!this.login.equals(providedLogin)) {
+            return false;
+        }
+        // Sprawdzenie czy hasło się zgadza (używając PasswordEncoder)
+        return passwordEncoder.matches(providedPassword, this.passwordHash);
+    }
 
-    public abstract void login(String login, String password); // zalogujSie()
-
-    public abstract void logout(); // wylogujSie()
-
-    // Getters and Setters
+    // Gettery i Settery
     public Long getId() {
         return id;
     }

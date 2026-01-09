@@ -87,11 +87,11 @@ public class Flight {
         }
 
         if (extraBaggage) {
-            price = price.add(new BigDecimal("100.00")); // Example fixed cost
+            price = price.add(new BigDecimal("100.00"));
         }
 
         if (insurance) {
-            price = price.add(new BigDecimal("50.00")); // Example fixed cost
+            price = price.add(new BigDecimal("50.00"));
         }
 
         return price;
