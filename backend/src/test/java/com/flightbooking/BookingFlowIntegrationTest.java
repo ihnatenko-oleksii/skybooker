@@ -19,8 +19,76 @@ public class BookingFlowIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    /**
+     * Rejestruje użytkownika (jeśli nie istnieje) i zwraca token JWT do autentykacji.
+     */
+    private String registerAndGetToken(String login, String email) {
+        // Spróbuj najpierw zalogować się (jeśli użytkownik już istnieje)
+        LoginDto loginDto = new LoginDto();
+        loginDto.setLogin(login);
+        loginDto.setPassword("test123");
+
+        ResponseEntity<AuthResponseDto> loginResponse = restTemplate.postForEntity(
+                "/api/auth/login",
+                loginDto,
+                AuthResponseDto.class);
+
+        // Jeśli logowanie się powiodło, zwróć token
+        if (loginResponse.getStatusCode() == HttpStatus.OK && loginResponse.getBody() != null 
+                && loginResponse.getBody().getAccessToken() != null) {
+            return loginResponse.getBody().getAccessToken();
+        }
+
+        // Jeśli logowanie się nie powiodło, zarejestruj nowego użytkownika
+        RegisterDto registerDto = new RegisterDto();
+        registerDto.setFirstName("Test");
+        registerDto.setLastName("User");
+        registerDto.setLogin(login);
+        registerDto.setEmail(email);
+        registerDto.setPassword("test123");
+        registerDto.setPhone("123456789");
+
+        ResponseEntity<String> registerResponse = restTemplate.postForEntity(
+                "/api/auth/register",
+                registerDto,
+                String.class);
+
+        // Jeśli rejestracja się powiodła lub użytkownik już istniał, zaloguj się
+        if (registerResponse.getStatusCode() == HttpStatus.CREATED || 
+            registerResponse.getStatusCode() == HttpStatus.OK) {
+            loginResponse = restTemplate.postForEntity(
+                    "/api/auth/login",
+                    loginDto,
+                    AuthResponseDto.class);
+
+            assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(loginResponse.getBody()).isNotNull();
+            assertThat(loginResponse.getBody().getAccessToken()).isNotNull();
+
+            return loginResponse.getBody().getAccessToken();
+        }
+
+        throw new RuntimeException("Failed to register or login user: " + login);
+    }
+
+    /**
+     * Tworzy nagłówki HTTP z tokenem JWT.
+     */
+    private HttpHeaders createAuthHeaders(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+    }
+
     @Test
     public void testCompleteBookingFlow_withPaymentSuccess() {
+        // Step 0: Register and login to get JWT token (use unique login based on test name and timestamp)
+        String uniqueLogin = "testuser1_" + System.currentTimeMillis();
+        String uniqueEmail = uniqueLogin + "@test.com";
+        String token = registerAndGetToken(uniqueLogin, uniqueEmail);
+        HttpHeaders headers = createAuthHeaders(token);
+
         // Step 1: Create booking
         BookingCreateRequest bookingRequest = new BookingCreateRequest();
         bookingRequest.setFlightId(1L);
@@ -40,8 +108,6 @@ public class BookingFlowIntegrationTest {
         extras.setInsurance(false);
         bookingRequest.setExtras(extras);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-User-Id", "1");
         HttpEntity<BookingCreateRequest> entity = new HttpEntity<>(bookingRequest, headers);
 
         ResponseEntity<BookingCreateResponse> bookingResponse = restTemplate.postForEntity(
@@ -50,9 +116,11 @@ public class BookingFlowIntegrationTest {
                 BookingCreateResponse.class);
 
         // Verify booking creation
+        System.out.println("Booking created - Status: " + bookingResponse.getStatusCode() + ", Body: " + bookingResponse.getBody());
         assertThat(bookingResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(bookingResponse.getBody()).isNotNull();
         assertThat(bookingResponse.getBody().getStatus()).isEqualTo("PENDING_PAYMENT");
+        System.out.println("✓ Booking creation verified - ID: " + bookingResponse.getBody().getId() + ", Status: " + bookingResponse.getBody().getStatus());
 
         Long bookingId = bookingResponse.getBody().getId();
 
@@ -62,16 +130,19 @@ public class BookingFlowIntegrationTest {
         paymentRequest.setMethod("CARD");
         paymentRequest.setOutcome("SUCCESS");
 
+        HttpEntity<PaymentRequest> paymentEntity = new HttpEntity<>(paymentRequest, headers);
         ResponseEntity<PaymentResponse> paymentResponse = restTemplate.postForEntity(
                 "/api/payments/mock",
-                paymentRequest,
+                paymentEntity,
                 PaymentResponse.class);
 
         // Verify payment
+        System.out.println("Payment processed - Status: " + paymentResponse.getStatusCode() + ", Body: " + paymentResponse.getBody());
         assertThat(paymentResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(paymentResponse.getBody()).isNotNull();
         assertThat(paymentResponse.getBody().getStatus()).isEqualTo("CONFIRMED");
         assertThat(paymentResponse.getBody().getBookingStatus()).isEqualTo("PAID");
+        System.out.println("✓ Payment verified - Status: " + paymentResponse.getBody().getStatus() + ", Booking Status: " + paymentResponse.getBody().getBookingStatus());
 
         // Step 3: Get booking details
         HttpEntity<Void> getEntity = new HttpEntity<>(headers);
@@ -82,13 +153,21 @@ public class BookingFlowIntegrationTest {
                 BookingResponse.class);
 
         // Verify booking status updated
+        System.out.println("Booking retrieved - Status: " + getBookingResponse.getStatusCode() + ", Booking Status: " + (getBookingResponse.getBody() != null ? getBookingResponse.getBody().getStatus() : "null"));
         assertThat(getBookingResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(getBookingResponse.getBody()).isNotNull();
         assertThat(getBookingResponse.getBody().getStatus()).isEqualTo("PAID");
+        System.out.println("✓ Booking status verified - Final Status: " + getBookingResponse.getBody().getStatus());
     }
 
     @Test
     public void testBookingCancellation() {
+        // Step 0: Register and login to get JWT token (use unique login based on test name and timestamp)
+        String uniqueLogin = "testuser2_" + System.currentTimeMillis();
+        String uniqueEmail = uniqueLogin + "@test.com";
+        String token = registerAndGetToken(uniqueLogin, uniqueEmail);
+        HttpHeaders headers = createAuthHeaders(token);
+
         // Step 1: Create booking
         BookingCreateRequest bookingRequest = new BookingCreateRequest();
         bookingRequest.setFlightId(1L);
@@ -103,8 +182,11 @@ public class BookingFlowIntegrationTest {
 
         bookingRequest.setPassengers(passengers);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-User-Id", "1");
+        BookingExtrasRequest extras = new BookingExtrasRequest();
+        extras.setExtraBaggage(false);
+        extras.setInsurance(false);
+        bookingRequest.setExtras(extras);
+
         HttpEntity<BookingCreateRequest> entity = new HttpEntity<>(bookingRequest, headers);
 
         ResponseEntity<BookingCreateResponse> bookingResponse = restTemplate.postForEntity(
@@ -112,6 +194,9 @@ public class BookingFlowIntegrationTest {
                 entity,
                 BookingCreateResponse.class);
 
+        assertThat(bookingResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(bookingResponse.getBody()).isNotNull();
+        
         Long bookingId = bookingResponse.getBody().getId();
 
         // Step 2: Cancel booking
@@ -132,6 +217,8 @@ public class BookingFlowIntegrationTest {
                 cancelEntity,
                 BookingResponse.class);
 
+        assertThat(getBookingResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(getBookingResponse.getBody()).isNotNull();
         assertThat(getBookingResponse.getBody().getStatus()).isEqualTo("CANCELLED");
     }
 }
