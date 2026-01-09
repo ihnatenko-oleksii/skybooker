@@ -11,10 +11,47 @@ Flight ticket reservation system built with Spring Boot (backend) + React (front
 
 ## 🚀 Quick start
 
-### 1. Start the database
+### Opcja 1: Uruchomienie z Docker Compose (zalecane)
+
+Uruchom wszystkie serwisy (PostgreSQL, Backend, Frontend) za pomocą jednej komendy:
 
 ```bash
 docker-compose up -d
+```
+
+Lub w trybie deweloperskim (z widocznymi logami):
+
+```bash
+docker-compose up
+```
+
+Aplikacja będzie dostępna:
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:8080
+- **PostgreSQL**: localhost:5432
+
+Aby zatrzymać wszystkie serwisy:
+```bash
+docker-compose down
+```
+
+Aby zobaczyć logi:
+```bash
+docker-compose logs -f backend
+docker-compose logs -f frontend
+```
+
+Aby przebudować kontenery po zmianach:
+```bash
+docker-compose up -d --build
+```
+
+### Opcja 2: Uruchomienie lokalne
+
+#### 1. Start the database
+
+```bash
+docker-compose up -d postgres
 ```
 
 Check that PostgreSQL is running:
@@ -22,7 +59,7 @@ Check that PostgreSQL is running:
 docker ps
 ```
 
-### 2. Start the backend
+#### 2. Start the backend
 
 ```bash
 cd backend
@@ -32,7 +69,7 @@ mvn spring-boot:run
 
 Backend will be available at: `http://localhost:8080`
 
-### 3. Start the frontend
+#### 3. Start the frontend
 
 In a new terminal:
 
