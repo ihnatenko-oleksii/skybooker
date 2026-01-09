@@ -29,10 +29,19 @@ public class PaymentService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Booking not found with id: " + request.getBookingId()));
 
-        // Walidacja statusu rezerwacji
+        // Jeśli status to PAYMENT_FAILED, zresetuj go do PENDING_PAYMENT przed nową próbą płatności
+        if (booking.getStatus() == BookingStatus.PAYMENT_FAILED) {
+            if (!booking.setStatus(BookingStatus.PENDING_PAYMENT)) {
+                throw new BusinessException("Cannot reset booking status from PAYMENT_FAILED to PENDING_PAYMENT");
+            }
+            // Zapisz zmianę statusu od razu, aby była widoczna dla dalszych operacji
+            booking = bookingRepository.save(booking);
+        }
+
+        // Walidacja statusu rezerwacji - po resecie powinien być PENDING_PAYMENT
         if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
             throw new BusinessException(
-                    "Booking is not in PENDING_PAYMENT status. Current status: " + booking.getStatus());
+                    "Booking is not in valid status for payment. Current status: " + booking.getStatus());
         }
 
         // Utworzenie lub aktualizacja płatności

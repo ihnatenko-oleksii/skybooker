@@ -45,13 +45,30 @@ function PaymentPage() {
 
         try {
             const response = await paymentApi.processMockPayment(paymentData);
-            setPaymentResult({
-                success: outcome === 'SUCCESS',
-                status: response.data.status,
-                bookingStatus: response.data.bookingStatus
-            });
+            
+            // Po płatności odśwież dane rezerwacji
+            await loadBooking();
+            
+            if (outcome === 'SUCCESS') {
+                // Po udanej płatności pokaż komunikat sukcesu
+                setPaymentResult({
+                    success: true,
+                    status: response.data.status,
+                    bookingStatus: response.data.bookingStatus
+                });
+            } else {
+                // Po nieudanej płatności wyczyść paymentResult, aby umożliwić ponowną próbę
+                // Status zostanie zaktualizowany przez loadBooking()
+                setPaymentResult(null);
+                setError('Płatność nie powiodła się. Możesz spróbować ponownie.');
+                // Po chwili wyczyść błąd, aby nie blokował interfejsu
+                setTimeout(() => setError(null), 3000);
+            }
         } catch (err) {
             setError(err.response?.data?.message || t('errors.processPayment'));
+            // Po błędzie również odśwież dane, aby pokazać aktualny status
+            await loadBooking();
+            setPaymentResult(null); // Wyczyść paymentResult, aby umożliwić ponowną próbę
         } finally {
             setLoading(false);
         }
@@ -64,7 +81,7 @@ function PaymentPage() {
         <div className="payment-container">
             <h1 className="section-title">{t('payment.title')}</h1>
 
-            {!paymentResult && (
+            {(booking.status === 'PENDING_PAYMENT' || booking.status === 'PAYMENT_FAILED') && !paymentResult?.success && (
                 <div className="payment-grid">
                     <div className="payment-summary card">
                         <h2 className="card-title">{t('payment.summary')}</h2>
@@ -97,6 +114,13 @@ function PaymentPage() {
                             <span>{t('payment.amount')}</span>
                             <span className="amount">{booking.totalPrice.toFixed(2)} {booking.currency}</span>
                         </div>
+                        
+                        {/* Informacja o możliwości ponownej próby jeśli wcześniej była nieudana płatność */}
+                        {booking.status === 'PAYMENT_FAILED' && (
+                            <div className="payment-retry-info" style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '0.5rem', fontSize: '0.875rem', color: '#856404' }}>
+                                Możesz ponownie spróbować zapłacić za tę rezerwację.
+                            </div>
+                        )}
                     </div>
 
                     <div className="payment-simulation card">
@@ -120,34 +144,26 @@ function PaymentPage() {
                 </div>
             )}
 
-            {error && <div className="error">{error}</div>}
+            {error && (booking.status === 'PENDING_PAYMENT' || booking.status === 'PAYMENT_FAILED') && <div className="error">{error}</div>}
 
-            {paymentResult && (
+            {paymentResult && paymentResult.success && (
                 <div className="payment-result-card card">
-                    {paymentResult.success ? (
-                        <div className="result-success">
-                            <div className="result-icon">✓</div>
-                            <h2>{t('payment.successTitle')}</h2>
-                            <p>{t('payment.successMessage')}</p>
+                    <div className="result-success">
+                        <div className="result-icon">✓</div>
+                        <h2>{t('payment.successTitle')}</h2>
+                        <p>{t('payment.successMessage')}</p>
 
-                            <div className="result-details">
-                                <div className="detail">
-                                    <span>{t('payment.status')}</span>
-                                    <strong>{t(`payment.statusValue.${paymentResult.status}`)}</strong>
-                                </div>
-                                <div className="detail">
-                                    <span>{t('payment.reservationId')}</span>
-                                    <strong>#{bookingId}</strong>
-                                </div>
+                        <div className="result-details">
+                            <div className="detail">
+                                <span>{t('payment.status')}</span>
+                                <strong>{t(`payment.statusValue.${paymentResult.status}`)}</strong>
+                            </div>
+                            <div className="detail">
+                                <span>{t('payment.reservationId')}</span>
+                                <strong>#{bookingId}</strong>
                             </div>
                         </div>
-                    ) : (
-                        <div className="result-fail">
-                            <div className="result-icon">✗</div>
-                            <h2>{t('payment.failTitle')}</h2>
-                            <p>{t('payment.failMessage')}</p>
-                        </div>
-                    )}
+                    </div>
 
                     <div className="result-actions">
                         <button onClick={() => navigate('/bookings')} className="btn-primary">
